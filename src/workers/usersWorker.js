@@ -37,6 +37,15 @@ module.exports = class UsersWorker {
     }
   }
 
+  async getUser(userId) {
+    const user = await this.mongodb.findOne(this.collectionName, { _id: userId });
+    if (user != null) {
+      return user;
+    } else {
+      throw 'User not found';
+    }
+  }
+
   async createMessage({ message, senderId }) {
     const messageCreated = await this.mongodb.insertOne(this.collectionName, {
       _id: uuid.v4(),

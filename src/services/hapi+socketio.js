@@ -94,6 +94,27 @@ module.exports = class Hapi {
         }
       },
       {
+        method: 'GET',
+        path: '/api/users/{id}',
+        options: {
+          tags: ['api'],
+          validate: {
+            params: Joi.object({
+              id: Joi.string()
+            })
+          }
+        },
+        handler: async (request, h) => {
+          const payload = request.params;
+          const userId = payload.id;
+          try {
+            return await usersWorker.getUser(userId);
+          } catch (error) {
+            return Boom.unauthorized(error);
+          }
+        }
+      },
+      {
         method: 'POST',
         path: '/api/messages',
         options: {
