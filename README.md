@@ -1,3 +1,3 @@
-# chatapp-service
+# ChatApp Api Service
 
 # WIP
