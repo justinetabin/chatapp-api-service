@@ -133,6 +133,7 @@ module.exports = class Hapi {
           const senderId = payload.senderId;
           const localId = payload.localId;
           try {
+            await usersWorker.getUser(senderId);
             return await messagesWorker.createMessage({ message, senderId, localId });
           } catch (error) {
             return Boom.badRequest(error);
