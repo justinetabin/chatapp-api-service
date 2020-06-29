@@ -20,7 +20,7 @@ module.exports = class UsersWorker {
       const userToCreate = await this.mongodb.insertOne(this.collectionName, {
         _id: uuid.v4(),
         username,
-        password, // hash this
+        password, // TODO: hash this and create a separate collection
         createdAt: new Date(),
         updatedAt: new Date()
       });
@@ -44,25 +44,5 @@ module.exports = class UsersWorker {
     } else {
       throw 'User not found';
     }
-  }
-
-  async createMessage({ message, senderId }) {
-    const messageCreated = await this.mongodb.insertOne(this.collectionName, {
-      _id: uuid.v4(),
-      message,
-      senderId,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-    return messageCreated.ops[0];
-  }
-
-  async fetchMessages() {
-    const messages = await this.mongodb.aggregate(this.collectionName, [
-      {$lookup: {
-        from: 'users',
-        localField: ''
-      }}
-    ]);
   }
 }
