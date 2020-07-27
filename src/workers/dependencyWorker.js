@@ -17,11 +17,11 @@ module.exports = class DependencyWorker {
     console.log('HapiJS is running.');
   }
 
-  createUsersWorker() {
+  makeUsersWorker() {
     return new UsersWorker(this.mongodb);
   }
 
-  createMessagesWorker() {
+  makeMessagesWorker() {
     return new MessagesWorker(this.mongodb);
   }
 }

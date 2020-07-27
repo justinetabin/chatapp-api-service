@@ -31,8 +31,8 @@ module.exports = class Hapi {
     ]
 
     // >>>>> TODO: move to outer layer
-    const usersWorker = workerFactory.createUsersWorker();
-    const messagesWorker = workerFactory.createMessagesWorker();
+    const usersWorker = workerFactory.makeUsersWorker();
+    const messagesWorker = workerFactory.makeMessagesWorker();
 
     messagesWorker.onCreateMessage((data) => {
       this.io.emit('message', data);
