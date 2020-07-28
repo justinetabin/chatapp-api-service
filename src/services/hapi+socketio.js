@@ -1,7 +1,5 @@
 const config = require('../config');
 const { Server } = require('@hapi/hapi');
-const Joi = require('@hapi/joi');
-const Boom = require('@hapi/boom');
 const Inert = require('@hapi/inert');
 const Vision = require('@hapi/vision');
 const HapiSwagger = require('hapi-swagger');
