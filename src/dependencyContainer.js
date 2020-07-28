@@ -1,4 +1,5 @@
-const { MongoConnection, MongoCollection, Hapi, UsersMongoStore, MessagesMongoStore } = require('./services');
+const { MongoCollection, MongoConnection, Hapi } = require('./libs');
+const { UsersMongoStore, MessagesMongoStore } = require('./services');
 const { MessagesWorker, UsersWorker } = require('./workers');
 const { Routes, Sockets } = require('./interfaces');
 

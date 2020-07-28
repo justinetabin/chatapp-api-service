@@ -1,13 +1,8 @@
-const { MongoCollection } = require('./mongodb');
 const uuid = require('uuid');
 const events = require('events');
 
 module.exports = class MessagesMongoStore {
     
-    /**
-    * 
-    * @param {MongoCollection} collection 
-    */
     constructor(collection) {
         this.collection = collection
         this.eventEmitter = new events.EventEmitter();

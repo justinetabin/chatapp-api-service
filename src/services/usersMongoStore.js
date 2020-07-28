@@ -1,12 +1,7 @@
-const { MongoCollection } = require('./mongodb');
 const uuid = require('uuid');
 
 module.exports = class UsersMongoStore {
     
-    /**
-    * 
-    * @param {MongoCollection} collection 
-    */
     constructor(collection) {
         this.collection = collection;
     }
