@@ -1,6 +1,7 @@
 
 module.exports = (workerFactory) => {
-    const messagesWorker = workerFactory.makeSharedMessagesWorker();
+    const messagesWorker = workerFactory.makeMessagesWorker();
+    
     return {
         path: '/',
         handler: (nsp, socket) => {

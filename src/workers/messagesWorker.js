@@ -1,5 +1,4 @@
 const { MessagesMongoStore } = require('../services');
-const events = require('events');
 
 module.exports = class MessagesWorker {
 
@@ -9,20 +8,14 @@ module.exports = class MessagesWorker {
    */
   constructor(messagesStore) {
     this.messagesStore = messagesStore;
-    this.eventEmitter = new events.EventEmitter();
   }
 
-  onCreateMessage(completionHandler) {
-    this.eventEmitter.on('createMessage', completionHandler);
-  }
-
-  emitCreateMessage(data) {
-    this.eventEmitter.emit('createMessage', data);
+  onCreateMessage(completion) {
+    this.messagesStore.onCreateMessage(completion)
   }
 
   async createMessage({ message, senderId, localId }) {
     const gotMessage = await this.messagesStore.createMessage(message, senderId, localId)
-    this.emitCreateMessage(gotMessage);
     return gotMessage;
   }
 

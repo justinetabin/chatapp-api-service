@@ -1,5 +1,6 @@
 const { MongoCollection } = require('./mongodb');
 const uuid = require('uuid');
+const events = require('events');
 
 module.exports = class MessagesMongoStore {
     
@@ -9,6 +10,15 @@ module.exports = class MessagesMongoStore {
     */
     constructor(collection) {
         this.collection = collection
+        this.eventEmitter = new events.EventEmitter();
+    }
+
+    onCreateMessage(completion) {
+        this.eventEmitter.on('createMessage', completion);
+    }
+
+    emitCreateMessage(data) {
+        this.eventEmitter.emit('createMessage', data);
     }
     
     async createMessage(message, senderId, localId) {
@@ -22,6 +32,7 @@ module.exports = class MessagesMongoStore {
             updatedAt: new Date()
         });
         const gotMessage = await this.getMessage(_id);
+        this.emitCreateMessage(gotMessage);
         return gotMessage;
     }
     

@@ -9,10 +9,6 @@ module.exports = class DependencyContainer {
     this.usersStore = new UsersMongoStore(new MongoCollection(this.mongoConn, 'users'));
     this.messagesStore = new MessagesMongoStore(new MongoCollection(this.mongoConn, 'messages'));
 
-    this.shared = {
-      messagesWorker: this.makeMessagesWorker()
-    }
-
     this.hapi = new Hapi(this);
   }
 
@@ -44,9 +40,5 @@ module.exports = class DependencyContainer {
 
   makeMessagesWorker() {
     return new MessagesWorker(this.messagesStore);
-  }
-
-  makeSharedMessagesWorker() {
-    return this.shared.messagesWorker;
   }
 }
