@@ -31,26 +31,23 @@ module.exports = class Hapi {
     ]
 
     apiFactory.makeRoutes().forEach((routes) => {
-      this.server.route(routes.map(this.toHapiRoute))
-    })
+      this.server.route(routes.map(this.toHapiRoute));
+    });
+
+    apiFactory.makeSockets().forEach((socketWrapper) => {
+      const nsp = this.io.of(socketWrapper.path)
+        nsp.on('connection', (socket) => {
+
+          // when connected, notify wrapper
+          socketWrapper.handler(nsp, socket);
+
+          // listen events per socket
+          socketWrapper.events.forEach((event) => {
+            socket.on(event.name, event.handler);
+          });
+        });
+    });
   }
-
-    // >>>>> TODO: move to outer layer
-  //   const usersWorker = workerFactory.makeUsersWorker();
-  //   const messagesWorker = workerFactory.makeMessagesWorker();
-
-  //   messagesWorker.onCreateMessage((data) => {
-  //     this.io.emit('message', data);
-  //   });
-
-  //   this.io.on('connection', (socket) => {
-  //     console.log('a user connected in /');
-
-  //     socket.on('disconnect', () => {
-  //       console.log('a user disconnected in /');
-  //     });
-  //   });
-  // <<<<< TODO: move to outer layer
 
   toHapiRoute(route) {
     return {

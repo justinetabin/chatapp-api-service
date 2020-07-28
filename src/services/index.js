@@ -1,7 +1,9 @@
-const MongoDB = require('./mongodb')
-const Hapi = require('./hapi+socketio');
+const { MongoConnection, MongoCollection } = require('./mongodb');
 
 module.exports = {
-  MongoDB,
-  Hapi
+  MongoConnection,
+  MongoCollection,
+  MessagesMongoStore: require('./messagesMongoStore'),
+  UsersMongoStore: require('./usersMongoStore'),
+  Hapi: require('./hapi+socketio'),
 }

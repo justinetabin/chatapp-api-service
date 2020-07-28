@@ -1,48 +1,25 @@
-const { MongoDB } = require('../services');
+const { UsersMongoStore } = require('../services');
 const uuid = require('uuid');
 
 module.exports = class UsersWorker {
 
   /**
    * 
-   * @param {MongoDB} mongodb 
+   * @param {UsersMongoStore} usersStore 
    */
-  constructor(mongodb) {
-    this.mongodb = mongodb;
-    this.collectionName = 'users';
-  }
-
-  async signup({ username, password }) {
-    const user = await this.mongodb.findOne(this.collectionName, { username });
-    if (user != null) {
-      throw 'Username exists'
-    } else {
-      const userToCreate = await this.mongodb.insertOne(this.collectionName, {
-        _id: uuid.v4(),
-        username,
-        password, // TODO: hash this and create a separate collection
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-      return userToCreate.ops[0];
-    }
+  constructor(usersStore) {
+    this.usersStore = usersStore;
   }
 
   async login({ username, password }) {
-    const user = await this.mongodb.findOne(this.collectionName, { username, password });
-    if (user != null) {
-      return user;
-    } else {
-      throw 'Username/password is incorrect'
-    }
+    return await this.usersStore.login(username, password);
+  }
+
+  async signup({ username, password }) {
+    return await this.usersStore.signup(username, password)
   }
 
   async getUser(userId) {
-    const user = await this.mongodb.findOne(this.collectionName, { _id: userId });
-    if (user != null) {
-      return user;
-    } else {
-      throw 'User not found';
-    }
+    return await this.usersStore.getUser(userId)
   }
 }

@@ -3,7 +3,8 @@ const Boom = require('@hapi/boom');
 
 module.exports = (workerFactory) => {
     const usersWorker = workerFactory.makeUsersWorker();
-    const messagesWorker = workerFactory.makeMessagesWorker();
+    const messagesWorker = workerFactory.makeSharedMessagesWorker();
+
     return [
         {
             path: '/api/messages',

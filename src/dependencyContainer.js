@@ -1,16 +1,23 @@
-const { MongoDB, Hapi } = require('./services');
+const { MongoConnection, MongoCollection, Hapi, UsersMongoStore, MessagesMongoStore } = require('./services');
 const { MessagesWorker, UsersWorker } = require('./workers');
-const { Routes } = require('./interfaces');
+const { Routes, Sockets } = require('./interfaces');
 
 module.exports = class DependencyContainer {
 
   constructor() {
-    this.mongodb = new MongoDB();
+    this.mongoConn = new MongoConnection();
+    this.usersStore = new UsersMongoStore(new MongoCollection(this.mongoConn, 'users'));
+    this.messagesStore = new MessagesMongoStore(new MongoCollection(this.mongoConn, 'messages'));
+
+    this.shared = {
+      messagesWorker: this.makeMessagesWorker()
+    }
+
     this.hapi = new Hapi(this);
   }
 
   async startServices() {
-    await this.mongodb.connect();
+    await this.mongoConn.connect();
     console.log('MongoDB is connected.');
     
     await this.hapi.startServer();
@@ -21,18 +28,25 @@ module.exports = class DependencyContainer {
    * API Factory
    */
   makeRoutes() {
-    return Routes(this)
+    return Routes(this);
+  }
+
+  makeSockets() {
+    return Sockets(this);
   }
 
   /**
    * Worker Factory
    */
-
   makeUsersWorker() {
-    return new UsersWorker(this.mongodb);
+    return new UsersWorker(this.usersStore);
   }
 
   makeMessagesWorker() {
-    return new MessagesWorker(this.mongodb);
+    return new MessagesWorker(this.messagesStore);
+  }
+
+  makeSharedMessagesWorker() {
+    return this.shared.messagesWorker;
   }
 }
