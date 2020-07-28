@@ -1,10 +1,10 @@
 
 const { DependencyWorker } = require('./workers');
-
+const DependencyContainer = require('./dependencyContainer');
 
 const main = async () => {
-  const dependencyWorker = new DependencyWorker();
-  await dependencyWorker.startServices(); 
+  const container = new DependencyContainer();
+  await container.startServices(); 
 }
 
 main();

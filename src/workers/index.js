@@ -1,4 +1,5 @@
 
 module.exports = {
-  DependencyWorker: require('./dependencyWorker')
+  UsersWorker: require('./usersWorker'),
+  MessagesWorker: require('./messagesWorker')
 }

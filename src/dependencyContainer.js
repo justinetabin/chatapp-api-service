@@ -1,8 +1,8 @@
-const { MongoDB, Hapi } = require('../services');
-const UsersWorker = require('./usersWorker');
-const MessagesWorker = require('./messagesWorker');
+const { MongoDB, Hapi } = require('./services');
+const { MessagesWorker, UsersWorker } = require('./workers');
+const { Routes } = require('./interfaces');
 
-module.exports = class DependencyWorker {
+module.exports = class DependencyContainer {
 
   constructor() {
     this.mongodb = new MongoDB();
@@ -16,6 +16,17 @@ module.exports = class DependencyWorker {
     await this.hapi.startServer();
     console.log('HapiJS is running.');
   }
+
+  /**
+   * API Factory
+   */
+  makeRoutes() {
+    return Routes(this)
+  }
+
+  /**
+   * Worker Factory
+   */
 
   makeUsersWorker() {
     return new UsersWorker(this.mongodb);
